@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabecera con Opciones Múltiples</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        * {
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #042f70, #1159c4); /* Fondo con degradado */
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 600;
+            position: fixed; /* Fija la cabecera en la parte superior */
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        .logo a {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav a::after,
+        .dropdown-content a::after { /* Se aplica también a las opciones del desplegable */
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 3px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .nav a:hover::after,
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .menu-toggle div {
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        @media (max-width: 1000px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                background: rgba(4, 47, 112, 0.9);
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+            }
+            .nav.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+        }
+        .dropdown-content a:hover::after {
+            transform: scaleX(1);
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none; /* Ocultar por defecto */
+            position:absolute;
+            top: 100%; /* Se despliega justo debajo de la cabecera */
+            left: -300%;
+            width: 80vw; /* Ocupar toda la pantalla */
+            background-color: white;
+            color: black;
+            min-width: 150px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            padding: 20px;
+            grid-template-columns: repeat(4, auto);
+            gap: 10px;
+            border-radius: 30px;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            position: relative; /* Necesario para el subrayado */
+            transition: color 0.3s;
+        }
+        .dropdown-content a:hover {
+            color: #1159c4;
+        }
+        .dropdown:hover .dropdown-content {
+            display: grid;
+        }
+        .dropdown-button {
+            font-size: 18px;
+            font-weight: 600;
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .dropdown-button::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 3px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+        .dropdown-button:hover::after {
+            transform: scaleX(1);
+        }
+        .slider-container {
+            position: relative;
+            max-width: 1500px;
+            margin: 80px auto 0; /* Asegura que el slider esté debajo de la cabecera */
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .slides {
+            display: flex;
+            width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide {
+            width: 100%;
+            flex-shrink: 0;
+        }
+        .slide img {
+            width: 100%;
+            display: block;
+            object-fit: cover; /* Esto mantiene la imagen encajada sin deformarla */
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        
+        .content-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: justify;
+            border: 2px solid #042f70;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .content-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .content {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .content h2 {
+            font-size: 28px;
+            color: #042f70;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .content p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .content-image {
+            flex: 1;
+        }
+        .content-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        .certifications {
+            max-width: 1000px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .certifications h2 {
+            font-size: 28px;
+            color: #042f70;
+            margin-bottom: 20px;
+        }
+        .certification-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 5px;
+            padding: 5px;
+            width: 100vw;
+            height: 20vh;
+        }
+        .certification-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .certification-box:hover {
+            transform: scale(1.05);
+        }
+        .certification-box img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 10px;
+        }
+        .certification-box h3 {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #042f70;
+        }
+    </style>
+    
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="a.html">
+                <img src="assets/imagenes/img/logo1.png" alt="Logo">
+            </a>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <nav class="nav">
+            <a href="#">Nosotros</a>
+            <div class="dropdown" onmouseover="dropdownHover()">
+                <a href="productos.html" class="dropdown-button">Productos <img src="assets/imagenes/img/select.png" alt="Logo"></a>
+                <div class="dropdown-content">
+                    <a href="#">SISTEMA DIGESTIVO</a>
+                    <a href="#">SISTEMA RESPIRATORIO</a>
+                    <a href="#">SISTEMA MUSCUESQUELETICO</a>
+                    <a href="#">APARATO GENITOURINARIO</a>
+                    <a href="#">METABOLISMO</a>
+                    <a href="#">ÓRGANOS SENSORIALES</a>
+                    <a href="#">MEDICAMENTOS DERMATOLÓGICOS</a>
+                    <a href="#">SUPLEMENTO DIETÉTICO</a>
+                    <a href="#">SUPLEMENTO NERVIOSO</a>
+                    <a href="#">ANTIINFECCIOSO EN GENERAL PARA USO SISTÉMICO</a>
+                    <a href="#">SISTEMA CARDIOVASCULAR</a>
+                    <a href="#">PRODUCTO NATURAL</a>
+                    <a href="#">SANGRE Y ÓRGANOS HEMATOYÉTICOS</a>
+                </div>
+            </div>
+            <a href="#">Farmacovigilancia</a>
+            <a href="#">Certificaciones</a>
+            <a href="#">Contacto</a>
+        </nav>
+    
+    </header>
+    <script>
+        function toggleMenu() {
+            document.querySelector('.nav').classList.toggle('active');
+        }
+    </script>
+    <div style="margin-top: 80px;"></div> <!-- Espaciador para que el slider no quede oculto bajo la cabecera -->
+    
+    <div class="slider-container">
+        <div class="slides">
+            <div class="slide"><img src="assets/imagenes/Baners/banner01.png" alt="Imagen 1"></div>
+            <div class="slide"><img src="assets/imagenes/Baners/banner02.jpeg" alt="Imagen 2"></div>
+            <div class="slide"><img src="assets/imagenes/Baners/banner03.jpeg" alt="Imagen 3"></div>
+        </div>
+        <button class="prev" onclick="moverSlide(1)">&#10094;</button>
+        <button class="next" onclick="moverSlide(1)">&#10095;</button>
+    </div>
+
+    <script>
+        let indice = 0;
+        function moverSlide(direccion) {
+            const slides = document.querySelector('.slides');
+            const totalSlides = document.querySelectorAll('.slide').length;
+            indice += direccion;
+            if (indice < 0) {
+                indice = totalSlides - 1;
+            } else if (indice >= totalSlides) {
+                indice = 0;
+            }
+            slides.style.transform = `translateX(-${indice * 100}%)`;
+        }
+    </script>
+<div style="margin-top: 100px;"></div> <!-- Espaciador para que el slider no quede oculto bajo la cabecera -->
+<div class="content-container">
+    <div class="content">
+        <h2>Nosotros</h2>
+        <p>Somos una Empresa Peruana dedicada a la comercialización y distribución de productos farmacéuticos, productos sanitarios y dispositivos médicos con altos estándares de calidad (BPA), Buenas prácticas de distribución y transporte (BPDT) y Buenas Prácticas de Farmacovigilancia (BPFV).</p>
+        <p>Nuestro equipo de colaboradores altamente calificado se mantiene en constante aplicación de las mejoras continuas de nuestros procesos con el único objetivo de seguir brindando nuestro mejor servicio en la satisfacción integral de nuestros clientes, buscando mejorar la calidad de vida de la comunidad que formamos parte con un especial interés en el área de salud.</p>
+    </div>
+    <div class="content-image">
+        <img src="assets/imagenes/Baners2/EDIFICIO.jpg" alt="Imagen Empresa">
+    </div>
+</div> 
+
+<div style="margin-top: 100px;"></div> <!-- Espaciador para que el slider no quede oculto bajo la cabecera -->
+    <h2 style="text-align: center; font-size: 32px; color: #042f70; margin-bottom: 20px;">Certificaciones</h2> 
+    <div class="certification-container">
+        <div class="certification-box">
+            <img src="assets/imagenes/icon-img/bpa.png" alt="Certificación 1">
+            <h3>Certificación de Buenas Prácticas de Almacenamiento.</h3>
+        </div>
+        <div class="certification-box">
+            <img src="assets/imagenes/icon-img/bpdt.png" alt="Certificación 2">
+            <h3>Certificación Buenas Prácticas de Distribución y Transporte</h3>
+        </div>
+        <div class="certification-box">
+            <img src="assets/imagenes/icon-img/bpfv.png" alt="Certificación 3">
+            <h3>Certificación Buenas Prácticas de Farmacovigilancia</h3>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 100px;"></div> <!-- Espaciador para que el slider no quede oculto bajo la cabecera -->
+</body>
+</html>

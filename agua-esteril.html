@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspirina</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .product-details { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        img { width: 100%; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        img:hover { transform: scale(1.05); }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-width: 100%; /* Reducimos el tamaño máximo */
+            max-height: 100%;
+            width: 600px;
+            height: 600px;
+            border-radius: 10px; /* Opcional: bordes redondeados */
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>AGUA ESTERIL</h2>
+    <div class="product-details">
+        <img id="productImage" src="assets/imagenes/product/Agua-esteril-para-inyeccion.jpg" alt="Aspirina" onclick="openModal()">
+        <p>INFORMACION...</p>
+    </div>
+    <a href="Productos.html">VOLVER AL MENU</a>
+
+    <!-- Modal para agrandar la imagen -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="fullImage">
+    </div>
+
+    <script>
+        function openModal() {
+            let modal = document.getElementById("imageModal");
+            let fullImage = document.getElementById("fullImage");
+            let productImage = document.getElementById("productImage");
+            fullImage.src = productImage.src; // Usar la misma imagen del producto
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
